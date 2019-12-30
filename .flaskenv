@@ -1,0 +1,7 @@
+FLASK_APP=app
+FLASK_ENV=development
+FLASK_CONFIG=development
+
+MAIL_SERVER=smtp.126.com
+MAIL_USERNAME=ghost199006@126.com
+MAIL_PASSWORD=wpk20122014

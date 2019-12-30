@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}注册-加菲猫图片社交社区{% endblock title %}
+
+{% block content %}
+<div class="container">
+    {% from 'bootstrap/form.html' import render_form %}
+
+    {{ render_form(form) }}
+</div>
+{% endblock content %}
