@@ -25,3 +25,11 @@ class User(db.Model, UserMixin):
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
+
+""" 淘宝店铺数据模型 """
+class Taobao(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    book_links = db.Column(db.String(120), unique=True, index=True)
+    book_title = db.Column(db.String(100))
+    book_ISBN = db.Column(db.String(20))
+    create_time = db.Column(db.DateTime, default=datetime.now)

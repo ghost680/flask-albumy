@@ -38,7 +38,7 @@ def register_blueprint(app):
 def register_errors(app):
     @app.errorhandler(400)
     def bad_request(e):
-        return render_template('errors/400.html'), 400
+        return render_template('errors/400.html'), 400 
     
     @app.errorhandler(403)
     def forbidden(e):

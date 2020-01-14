@@ -54,6 +54,7 @@ def login():
     return render_template('auth/login.html')
 
 """ 确认账号 """
-@auth_bp.route('/confirm', methods=['GET', 'POST'])
-def confirm():
+@auth_bp.route('/confirm/<token>', methods=['GET'])
+@login_required
+def confirm(token):
     return render_template('auth/confirm.html')
