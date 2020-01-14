@@ -3,6 +3,7 @@
 import os
 import re
 import time
+import random
 import requests
 from lxml import etree
 
@@ -31,16 +32,31 @@ def register_commands(app):
             "referer": "https://shop105628567.taobao.com/search.htm?spm=2013.1.0.0.1c5b6e36YfULwp&search=y"
         }
 
-        for index in range(1):
-            r = requests.get('https://shop105628567.taobao.com/i/asynSearch.htm?_ksTS=1578987915300_576&callback=jsonp577&mid=w-3053151168-0&wid=3053151168&path=/search.htm&search=y&spm=2013.1.0.0.1c5b6e36YfULwp&pageNo=%d'%(index), headers=headers)
+        for index in range(510):
+            path = 'https://shop105628567.taobao.com/i/asynSearch.htm?_ksTS=1578987915300_576&callback=jsonp577&mid=w-3053151168-0&wid=3053151168&path=/search.htm&search=y&spm=2013.1.0.0.1c5b6e36YfULwp&pageNo=%d'%(index+1)
 
+            print(path)
+            
+            r = requests.get(path, headers=headers)
             urls = re.findall(r'item\.taobao\.com\/item.htm?\?id=[\d]{12}', r.text)
-            for item in urls:
+            list_urls = list(set(urls))
+            for item in list_urls:
                 print(item)
+                # 获取图书详情数据
+                text = requests.get('http://%s'% item).text
+                html = etree.HTML(text)
+                book_title = html.xpath('//h3[@class="tb-main-title"]/text()')[0].strip()
+                book_ISBN = html.xpath('//ul[@class="attributes-list"]/li/@title')
+                book_price = html.xpath('//em[@class="tb-rmb-num"]/text()')[0].strip()
+                book_bn = ''
+                for isbn in book_ISBN:
+                    if re.match(r'^\d+$', isbn):
+                        book_bn = isbn
                 try:
-                    tb = Taobao(book_links=item, book_title='', book_ISBN='')
+                    tb = Taobao(book_links=item, book_title=book_title, book_price=str(book_price), book_isbn=str(book_bn))
                     db.session.add(tb)
                     db.session.commit()
+                    time.sleep(random.random() * 5)
                 except Exception as e:
                     print(e)
                     print("链接已存在")

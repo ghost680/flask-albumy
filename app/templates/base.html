@@ -10,9 +10,9 @@
 </head>
 <body>
     {% block content %}{% endblock content %}
-    {% include 'common/footer.html' %}
     {% block scripts %}
-    {{ static_file('js', 'css/bootstrap.min.js') }}
+        {{ static_file('js', 'js/jquery.js') }}
+        {{ static_file('js', 'js/bootstrap.min.js') }}
     {% endblock scripts %}
 </body>
 </html>

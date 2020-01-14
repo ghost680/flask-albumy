@@ -31,5 +31,6 @@ class Taobao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     book_links = db.Column(db.String(120), unique=True, index=True)
     book_title = db.Column(db.String(100))
-    book_ISBN = db.Column(db.String(20))
+    book_price = db.Column(db.String(20))
+    book_isbn = db.Column(db.String(20))
     create_time = db.Column(db.DateTime, default=datetime.now)
