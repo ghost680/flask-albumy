@@ -1,11 +1,27 @@
 {% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
 
 {% block title %}注册-加菲猫图片社交社区{% endblock title %}
 
 {% block content %}
 <div class="container">
-    {% from 'bootstrap/form.html' import render_form %}
-
-    {{ render_form(form) }}
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-8">
+                <img src="{{ url_for('static', filename='img/login_bg.jpg') }}" class="rounded img-fluid">
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-3 w-100 bg-light">
+                    <div class="card-header"><h4>欢迎来到加菲猫社区!</h4></div>
+                    <div class="card-body">
+                        {{ render_form(form) }}
+                        <hr>
+                        <small>已有账号? <a href="{{ url_for('.login') }}">立即登录</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock content %}

@@ -1,7 +1,29 @@
 {% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+
 {% block title %}用户登录{% endblock title %}
+
 {% block content %}
 <div class="container">
-    <p>这是用户登录页面</p>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-8">
+                <img src="{{ url_for('static', filename='img/login_bg.jpg') }}" class="rounded img-fluid">
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-3 w-100 bg-light">
+                    <div class="card-header"><h4>欢迎来到加菲猫社区!</h4></div>
+                    <div class="card-body">
+                        {{ render_form(form) }}
+                        <hr>
+                        <small>
+                            <a href="{{ url_for('.login') }}">忘记密码</a>
+                            <a href="{{ url_for('.register') }}">立即注册</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock content %}

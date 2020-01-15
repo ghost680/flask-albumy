@@ -3,8 +3,21 @@
 
 {% block content %}
 <div class="container">
-    <h1>
-        hello world
-    </h1>
+    {% if current_user.is_authenticated %}
+    <h1>用户已经登录了</h1>
+    {% else %}
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-8">
+                <img src="{{ url_for('static', filename='img/index_bg.jpg') }}" class="rounded img-fluid">
+            </div>
+            <div class="col-md-4 align-self-center">
+                <h1>加菲猫图片社区</h1>
+                <p>捕捉并记住每一个美好的时刻</p>
+                <p><a class="btn btn-primary btn-lg" href="{{ url_for('auth.register') }}">立即加入</a></p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock content %}
