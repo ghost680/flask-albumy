@@ -38,8 +38,8 @@ def register_commands(app):
             "referer": "https://shop105628567.taobao.com/search.htm?spm=2013.1.0.0.1c5b6e36YfULwp&search=y"
         }
 
-        for index in range(1):
-            path = 'https://shop105628567.taobao.com/i/asynSearch.htm?_ksTS=1578987915300_576&callback=jsonp577&mid=w-3053151168-0&wid=3053151168&path=/search.htm&search=y&spm=2013.1.0.0.1c5b6e36YfULwp&pageNo=%d' % (index+84)
+        for index in range(100):
+            path = 'https://shop105628567.taobao.com/i/asynSearch.htm?_ksTS=1578987915300_576&callback=jsonp577&mid=w-3053151168-0&wid=3053151168&path=/search.htm&search=y&spm=2013.1.0.0.1c5b6e36YfULwp&pageNo=%d' % (index+101)
 
             print(path)
             
@@ -49,20 +49,20 @@ def register_commands(app):
             for item in list_urls:
                 print('https://%s'% item)
                 # 获取图书详情数据
-                text = s.get('https://%s'% item, headers=headers).text
-                html = etree.HTML(text)
-                book_title = html.xpath('//h3[@class="tb-main-title"]/text()')[0].strip()
-                book_ISBN = html.xpath('//ul[@class="attributes-list"]/li/@title')
-                book_price = html.xpath('//em[@class="tb-rmb-num"]/text()')[0].strip()
-                book_bn = ''
-                for isbn in book_ISBN:
-                    if re.match(r'^[\d+]{13}$', isbn):
-                        book_bn = isbn
+                # text = s.get('https://%s'% item, headers=headers).text
+                # html = etree.HTML(text)
+                # book_title = html.xpath('//h3[@class="tb-main-title"]/text()')[0].strip()
+                # book_ISBN = html.xpath('//ul[@class="attributes-list"]/li/@title')
+                # book_price = html.xpath('//em[@class="tb-rmb-num"]/text()')[0].strip()
+                # book_bn = ''
+                # for isbn in book_ISBN:
+                #     if re.match(r'^[\d+]{13}$', isbn):
+                #         book_bn = isbn
                 try:
-                    tb = Taobao(book_links=item, book_title=book_title, book_price=str(book_price), book_isbn=str(book_bn))
+                    tb = Taobao(book_links=item)
                     db.session.add(tb)
                     db.session.commit()
-                    time.sleep(random.random() * 8)
+                    time.sleep(random.random() * 5)
                     print("sleep...",)
                 except Exception as e:
                     print(e)
