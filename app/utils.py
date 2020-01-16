@@ -12,6 +12,7 @@ from itsdangerous import BadSignature, SignatureExpired
 
 from app.extensions import db
 from app.config import Operations
+from app.models import User
 
 """ 生成带时间戳的JSON web的签名 """
 def generate_token(user, operation, expire_in=None, **kwargs):
@@ -22,7 +23,7 @@ def generate_token(user, operation, expire_in=None, **kwargs):
     return s.dumps(data)
 
 """ 解析并验证确认令牌 """
-def validate_token(user, token, operation):
+def validate_token(user, token, operation, new_password=None):
     s = Serializer(current_app.config['SECRET_KEY'])
 
     try:
@@ -35,6 +36,15 @@ def validate_token(user, token, operation):
     
     if operation == Operations.CONFIRM:
         user.confirmed = True
+    elif operation == Operations.RESET_PASSWORD:
+        user.set_password(new_password)
+    elif operation == Operations.CHANGE_EMAIL:
+        new_email = data.get('new_email')
+        if new_email is None:
+            return False
+        if User.query.filter_by(email=new_email).first() is not None:
+            return False
+        user.email = new_email
     else:
         return False
     
@@ -55,5 +65,4 @@ def redirect_back(default='main.main_index', **kwargs):
         if is_safe_url(target):
             return redirect(target)
     return redirect(url_for(default, **kwargs))
-        
         
