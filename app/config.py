@@ -30,7 +30,7 @@ class BaseConfig(object):
   APP_PER_PAGE = 20
   APP_DETAILS_PER_PAGE = 16
   ALBUMY_MAIL_SUBJECT_PREFIX = '[Albumy]'
-  ALBUMY_ADMIN_EMAIL = os.getenv('ALBUMY_ADMIN', 'admin@helloflask.com')
+  ALBUMY_ADMIN_EMAIL = os.getenv('ALBUMY_ADMIN', 'ghost2019@qq.com')
 
   MAIL_SERVER = os.getenv('MAIL_SERVER')
   MAIL_PORT = 465

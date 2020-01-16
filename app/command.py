@@ -8,8 +8,10 @@ import requests
 from lxml import etree
 
 import click
+from flask import current_app
 from app.extensions import db
-from app.models import Taobao
+from app.models import Role
+from app.models import Taobao, User, Role
 
 def register_commands(app):
     @app.cli.command()
@@ -22,6 +24,28 @@ def register_commands(app):
             click.echo('Drop tables.')
         db.create_all()
         click.echo('Initialized database.')
+    
+    # 初始化权限角色
+    @app.cli.command()
+    def init():
+        """ Initialize Albumy. """
+        click.echo('Initializing the roles and permissions...')
+        Role.init_role()
+        click.echo('Done.')
+    
+    # 为已经存在点用户添加角色和权限
+    @app.cli.command()
+    def init_role_permission():
+        """ set role permission """
+        for user in User.query.all():
+            if user.role is None:
+                if user.email == current_app.config['ALBUMY_ADMIN_EMAIL']:
+                    user.role = Role.query.filter_by(name='Administrator').first()
+                else:
+                    user.role = Role.query.filter_by(name='User').first()
+            
+            db.session.add(user)
+        db.session.commit()
     
     @app.cli.command()
     def spider():
