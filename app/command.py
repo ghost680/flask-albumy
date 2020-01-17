@@ -46,6 +46,7 @@ def register_commands(app):
             
             db.session.add(user)
         db.session.commit()
+        click.echo('Done.')
     
     @app.cli.command()
     def spider():

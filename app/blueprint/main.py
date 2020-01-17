@@ -7,6 +7,7 @@ from flask_login import login_required, current_user
 from flask_dropzone import random_filename
 
 from app.decorators import confirm_required, permission_required
+from app.extensions import db
 from app.models import Photo
 from app.utils import resize_image
 
@@ -31,8 +32,10 @@ def upload():
         # 创建图片的数据库记录
         photo = Photo(
             filename = filename,
-            author = current_user._get_current_object() 
+            filename_s = filename_s,
+            filename_m = filename_m,
             # 这里使用author关系属性与用户建立关系，需要对代理对象current_user调用_get_current_object方法获取真实用户对象，而不是使用代理对象current_user
+            author = current_user._get_current_object()
         )
 
         db.session.add(photo)
