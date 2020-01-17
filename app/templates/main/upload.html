@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import static_file -%}
+
+{% block title %}图片上传{% endblock title %}
+
+{% block styles %}
+    {{ super() }}
+    {{ static_file('css', 'css/dropzone.min.css') }}
+    {{
+        dropzone.style('margin: 20px 0; border: 2px dashed #0087F7; min-height: 400px;')
+    }}
+{% endblock styles %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>图片上传</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {{ dropzone.create(action='main.upload') }}
+            <a href="#" class="btn btn-light float-right">完成</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ static_file('js', 'js/dropzone.min.js') }}
+    {{ dropzone.config() }}
+{% endblock scripts %}

@@ -6,7 +6,7 @@ from flask_login import current_user
 from flask_wtf.csrf import CSRFError
 from app.blueprint.main import main_bp
 from app.blueprint.auth import auth_bp
-from app.extensions import bootstrap, db, login_manager, mail, ext
+from app.extensions import bootstrap, db, login_manager, dropzone, mail, csrf, ext
 from app.config import config
 from app.command import register_commands
 
@@ -15,6 +15,9 @@ def create_app(config_name=None):
         config_name = os.getenv('FLASK_CONFIG', 'development')
     
     app = Flask('app')
+    
+    app.jinja_env.trim_blocks = True
+    app.jinja_env.lstrip_blocks = True
     app.config.from_object(config[config_name])
 
     register_blueprint(app)
@@ -29,6 +32,8 @@ def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
+    dropzone.init_app(app)
+    csrf.init_app(app)
     ext.init_app(app)
 
 def register_blueprint(app):

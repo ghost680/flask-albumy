@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):
     website = db.Column(db.String(255))
     bio = db.Column(db.String(120))
     location = db.Column(db.String(50))
-    member_since = db.Column(db.DateTime, default=datetime.utcnow)
+    member_since = db.Column(db.DateTime, default=datetime.now)
     confirmed = db.Column(db.Boolean, default=False) # 确认用户状态是否激活
     ip = db.Column(db.String(20))
     platform = db.Column(db.String(20)) # 操作系统
@@ -32,6 +32,9 @@ class User(db.Model, UserMixin):
     # 一个角色可以有多个用户，和用户表建立一对多关系
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     role = db.relationship('Role', back_populates='users')
+
+    # 和照片表建立一对多关系
+    photos = db.relationship('Photo', back_populates='author', cascade='all') # 开启cascade权限，一旦用户被删除，和他相关点图片也会被删除
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -52,11 +55,25 @@ class User(db.Model, UserMixin):
     # 验证用户权限
     @property
     def is_admin(self):
-        return self.role.name = 'Administrator'
+        return self.role.name == 'Administrator'
 
     def can(self, permission_name):
         permission = Permission.query.filter_by(name=permission_name).first()
         return permission is not None and self.role is not None and permission in self.role.permissions
+
+
+""" 照片模型 """
+class Photo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(500))
+    filename = db.Column(db.String(64))
+    filename_s = db.Column(db.String(64))
+    filename_m = db.Column(db.String(64))
+    timestamp = db.Column(db.DateTime, default=datetime.now)
+
+    # 和用户建立一对多关系
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    author = db.relationship('User', back_populates='photos')
 
 """ 角色模型 """
 class Role(db.Model):

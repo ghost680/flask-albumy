@@ -5,6 +5,8 @@ try:
 except ImportError:
     from urllib.parse import urlparse, urljoin
 
+import os
+from PIL import Image
 from flask import current_app, request, url_for, redirect, flash
 from itsdangerous import BadSignature, SignatureExpired
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -65,4 +67,20 @@ def redirect_back(default='main.main_index', **kwargs):
         if is_safe_url(target):
             return redirect(target)
     return redirect(url_for(default, **kwargs))
-        
+
+""" 裁剪图片 """
+def resize_image(image, filename, base_width):
+    filename, ext = os.path.splitext(filename) # 分离文件名和缀名，而且python自带列表解构
+    img = Image.open(image)
+    if img.size[0] <= base_width:
+        return filename + ext # 重新拼装文件名，不知道这一步有什么用意，多余
+    
+    w_percent = (base_width / float(img.size[0]))
+    h_size = int((float(img.size[1]) * float(w_percent)))
+    img = img.resize((base_width, h_size), Image.ANTIALIAS)
+
+    filename += current_app.config['ALBUMY_PHOTO_SUFFIX']['base_width'] + ext
+    img.save(os.path.join(current_app.config['ALBUMY_UPLOAD_PATH'], filename), optimize=True, quality=85)
+    return filename
+
+    

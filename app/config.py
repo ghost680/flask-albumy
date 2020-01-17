@@ -21,16 +21,30 @@ class Operations:
     
 class BaseConfig(object):
   SECRET_KEY = os.getenv('SECRET_KEY', '0487f30a81244b6ea8c6de8ca81feba6')
+
   SQLALCHEMY_TRACK_MODIFICATIONS = False
   SQLALCHEMY_RECORD_QUERIES = True
   SQLALCHEMY_POOL_RECYCLE = 280
+
   SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS = True
   SITEMAP_BLUEPRINT_URL_PREFIX = '/'
+
+  DROPZONE_MAX_FILE_SIZE = 2
+  DROPZONE_MAX_FILES = 20
+  DROPZONE_ALLOWED_FILE_TYPE = 'image'
+  DROPZONE_ENABLE_CSRF = True
+  MAX_CONTENT_LENGTH = 2 * 1024 * 1024
 
   APP_PER_PAGE = 20
   APP_DETAILS_PER_PAGE = 16
   ALBUMY_MAIL_SUBJECT_PREFIX = '[Albumy]'
   ALBUMY_ADMIN_EMAIL = os.getenv('ALBUMY_ADMIN', 'ghost2019@qq.com')
+  ALBUMY_UPLOAD_PATH = os.path.join(basedir, 'uploads')
+  ALBUMY_PHOTO_SIZE = {'small': 400, 'medium': 800}
+  ALBUMY_PHOTO_SUFFIX = {
+    ALBUMY_PHOTO_SIZE['small']: '_s',  # thumbnail
+    ALBUMY_PHOTO_SIZE['medium']: '_m',  # display
+  }
 
   MAIL_SERVER = os.getenv('MAIL_SERVER')
   MAIL_PORT = 465
