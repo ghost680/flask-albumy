@@ -10,17 +10,27 @@
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         {% block styles -%}
             {{ static_file('css', 'css/bootstrap.min.css') }}
+            {{ static_file('css', 'css/style.css') }}
         {%- endblock styles %}
     {%- endblock head %}
 </head>
 <body>
+<main>
     {% for message in get_flashed_messages(with_categories=True) -%}
         <div class="alert alert-{{ message[0] }}">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             {{ message[1] }}
         </div>
     {%- endfor %}
+    {% block header %}
+        {% include 'common/header.html' %}
+    {% endblock header %}
     {% block content %}{% endblock content %}
+    {% block footer %}
+        {% include 'common/footer.html' %}
+    {% endblock footer %}
+</main>
+
     {% block scripts -%}
         {{ static_file('js', 'js/jquery.js') }}
         {{ static_file('js', 'js/bootstrap.min.js') }}

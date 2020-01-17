@@ -1,0 +1,7 @@
+html, body, main {
+    height: 100%;
+}
+
+.container-box {
+    min-height: calc(100% - 100px);
+}
