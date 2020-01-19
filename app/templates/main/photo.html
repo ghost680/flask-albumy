@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+{% block title %}{{ photo.author.name }} photo{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="photo">
+                <a href="{{ url_for('.get_image', filename=photo.filename) }}" target="_blank">
+                    <img src="{{ url_for('.get_image', filename=photo.filename_m) }}" class="img-fluid">
+                </a>
+            </div>
+
+            <a href="javascript:;" class="btn btn-primary btn-sm text-white" data-toggle="modal" data-target="#share-Modal">分享</a>
+            {% if current_user == photo.author or current_user.can('MODERATE') %}
+                <a class="btn btn-danger btn-sm text-white" data-toggle="modal" data-target="#confirm-delete" data-href="{{ url_for('.delete_photo', photo_id=photo.id) }}">删除</a>
+            {% endif %}
+
+            <p class="text-muted float-right small">
+                <span class="oi oi-clock"></span>
+                上传于 {{ photo.timestamp }}
+            </p>
+            {% include 'main/_comments.html' %}
+        </div>
+        <div class="col-md-4">
+            {% include 'main/_photo_sidebar.html' %}
+        </div>
+    </div>
+
+    <!-- share modal -->
+    <div class="modal fade" id="share-modal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shareModalLabel">Permalink</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body w-100">
+                    <input class="form-control" value="{{ url_for('.show_photo', photo_id=photo.id, _external=True) }}"
+                           readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- share modal /-->
+
+    <!-- delete confirm modal -->
+    {% if current_user.is_authenticated %}
+        <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmModalLabel">Delete Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this item?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form class="delete-form" action="" method="post">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-danger btn-confirm" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <!-- delete confirm modal /-->
+</div>
+{% endblock content %}

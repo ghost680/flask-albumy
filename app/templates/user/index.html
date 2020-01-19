@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'macros.html' import photo_card %}
+
+{% block title %}{{ user.name }}{% endblock title %}
+
+{% block content %}
+<div class="container">
+    {% include 'user/_header.html' %}
+    <div class="row border pb-3">
+    {% if photos %}
+        {% for photo in photos %}
+        <div class="col-md-3 mt-3">
+            {{ photo_card(photo) }}
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-md-12">
+            <!-- 没有图片显示提示文字 -->
+            <h3>No photos.</h3>
+            {% if user == current_user %}
+                <!-- 如果是当前用户自己的主页，显示上传页面链接 -->
+                <a class="btn btn-link" href="{{ url_for('main.upload') }}">上传</a>
+            {% else %}
+                <!-- 否则显示探索页面链接 -->
+                <a class="btn btn-link" href="{{ url_for('main.explore') }}">浏览</a>
+            {% endif %}
+        </div>
+    {% endif %}
+    </div>
+
+    {% if photos %}
+    <div class="page-footer mt-4">
+        {{ render_pagination(pagination, align='center') }}
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

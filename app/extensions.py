@@ -11,6 +11,7 @@ from flask_wtf import CSRFProtect
 from flask_sitemap import Sitemap
 from flask_avatars import Avatars
 from flask_migrate import Migrate
+from flask_moment import Moment
 
 db = SQLAlchemy()
 bootstrap = Bootstrap()
@@ -21,6 +22,7 @@ csrf = CSRFProtect()
 ext = Sitemap()
 avatars = Avatars()
 migrate = Migrate()
+moment = Moment()
 
 @login_manager.user_loader
 def load_user(user_id):

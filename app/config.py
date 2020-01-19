@@ -36,7 +36,9 @@ class BaseConfig(object):
   MAX_CONTENT_LENGTH = 2 * 1024 * 1024
 
   APP_PER_PAGE = 20
-  APP_DETAILS_PER_PAGE = 16
+  ALBUMY_PHOTO_PER_PAGE = 16
+  ALBUMY_COMMENT_PER_PAGE = 10
+
   ALBUMY_MAIL_SUBJECT_PREFIX = '[Albumy]'
   ALBUMY_ADMIN_EMAIL = os.getenv('ALBUMY_ADMIN', 'ghost2019@qq.com')
   ALBUMY_UPLOAD_PATH = os.path.join(basedir, 'uploads')

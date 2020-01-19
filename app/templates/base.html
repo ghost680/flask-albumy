@@ -10,6 +10,7 @@
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         {% block styles -%}
             {{ static_file('css', 'css/bootstrap.min.css') }}
+            {{ static_file('css', 'open-iconic/font/css/open-iconic-bootstrap.css') }}
             {{ static_file('css', 'css/style.css') }}
         {%- endblock styles %}
     {%- endblock head %}
@@ -34,6 +35,7 @@
     {% block scripts -%}
         {{ static_file('js', 'js/jquery.js') }}
         {{ static_file('js', 'js/bootstrap.min.js') }}
+        {{ static_file('js', 'js/script.js') }}
     {%- endblock scripts %}
 </body>
 </html>
