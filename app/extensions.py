@@ -9,6 +9,8 @@ from flask_mail import Mail
 from flask_dropzone import Dropzone
 from flask_wtf import CSRFProtect
 from flask_sitemap import Sitemap
+from flask_avatars import Avatars
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
 bootstrap = Bootstrap()
@@ -17,6 +19,8 @@ mail = Mail()
 dropzone = Dropzone()
 csrf = CSRFProtect()
 ext = Sitemap()
+avatars = Avatars()
+migrate = Migrate()
 
 @login_manager.user_loader
 def load_user(user_id):

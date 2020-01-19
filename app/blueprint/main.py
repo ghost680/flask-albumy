@@ -2,7 +2,7 @@
 
 import os
 
-from flask import Blueprint, render_template, request, current_app
+from flask import Blueprint, render_template, request, current_app, send_from_directory
 from flask_login import login_required, current_user
 from flask_dropzone import random_filename
 
@@ -16,6 +16,10 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/', methods=['GET'])
 def main_index():
     return render_template('main/index.html')
+
+@main_bp.route('/avatars/<path:filename>')
+def get_avatar(filename):
+    return send_from_directory(current_app.config['AVATARS_SAVE_PATH'], filename)
 
 @main_bp.route('/upload', methods=['GET', 'POST'])
 @login_required # 验证登录状态

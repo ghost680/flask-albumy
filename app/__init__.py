@@ -6,7 +6,7 @@ from flask_login import current_user
 from flask_wtf.csrf import CSRFError
 from app.blueprint.main import main_bp
 from app.blueprint.auth import auth_bp
-from app.extensions import bootstrap, db, login_manager, dropzone, mail, csrf, ext
+from app.extensions import bootstrap, db, login_manager, dropzone, mail, csrf, ext, avatars, migrate
 from app.config import config
 from app.command import register_commands
 
@@ -35,6 +35,8 @@ def register_extensions(app):
     dropzone.init_app(app)
     csrf.init_app(app)
     ext.init_app(app)
+    avatars.init_app(app)
+    migrate.init_app(app, db)
 
 def register_blueprint(app):
     app.register_blueprint(main_bp)

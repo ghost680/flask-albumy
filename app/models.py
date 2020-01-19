@@ -3,6 +3,7 @@
 from datetime import datetime
 from flask import current_app
 from flask_login import UserMixin
+from flask_avatars import Identicon
 from app.extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -24,6 +25,10 @@ class User(db.Model, UserMixin):
     location = db.Column(db.String(50))
     member_since = db.Column(db.DateTime, default=datetime.now)
     confirmed = db.Column(db.Boolean, default=False) # 确认用户状态是否激活
+    avatar_s = db.Column(db.String(64))
+    avatar_m = db.Column(db.String(64))
+    avatar_l = db.Column(db.String(64))
+
     ip = db.Column(db.String(20))
     platform = db.Column(db.String(20)) # 操作系统
     browser = db.Column(db.String(20)) # 浏览器
@@ -35,6 +40,19 @@ class User(db.Model, UserMixin):
 
     # 和照片表建立一对多关系
     photos = db.relationship('Photo', back_populates='author', cascade='all') # 开启cascade权限，一旦用户被删除，和他相关点图片也会被删除
+
+
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+        self.generate_avatar()
+    
+    def generate_avatar(self):
+        avatar = Identicon()
+        filenames = avatar.generate(text=self.username)
+        self.avatar_s = filenames[0]
+        self.avatar_m = filenames[1]
+        self.avatar_l = filenames[2]
+        db.session.commit()
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
