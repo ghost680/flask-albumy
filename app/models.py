@@ -90,6 +90,7 @@ class Photo(db.Model):
     filename_s = db.Column(db.String(64))
     filename_m = db.Column(db.String(64))
     timestamp = db.Column(db.DateTime, default=datetime.now)
+    flag = db.Column(db.Integer, default=0)
 
     # 和用户建立一对多关系
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))

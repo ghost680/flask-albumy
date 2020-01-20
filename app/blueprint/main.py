@@ -28,6 +28,7 @@ def get_avatar(filename):
 """ 获取图片 """
 @main_bp.route('/upload/<path:filename>')
 @login_required
+@confirm_required # 验证确认状态
 def get_image(filename):
     return send_from_directory(current_app.config['ALBUMY_UPLOAD_PATH'], filename)
 
@@ -57,15 +58,17 @@ def upload():
         db.session.commit()
     return render_template('main/upload.html')
 
-""" 浏览 """
+""" 浏览 """ 
 @main_bp.route('/explore', methods=['GET'])
 @login_required
+@confirm_required # 验证确认状态
 def explore():
     return render_template('main/explore.html')
 
 """ 查看图片 """
 @main_bp.route('/photo/<int:photo_id>', methods=['GET'])
 @login_required
+@confirm_required # 验证确认状态
 def show_photo(photo_id):
     photo = Photo.query.get_or_404(photo_id)
     page = request.args.get('page', 1, type=int)
@@ -89,6 +92,7 @@ def show_photo(photo_id):
 """ 查看下一张图片 """
 @main_bp.route('/photo/n/<int:photo_id>')
 @login_required
+@confirm_required # 验证确认状态
 def photo_next(photo_id):
     photo = Photo.query.get_or_404(photo_id)
     photo_n = Photo.query.with_parent(photo.author).filter(Photo.id < photo_id).order_by(Photo.id.desc()).first()
@@ -101,6 +105,7 @@ def photo_next(photo_id):
 """ 查看上一张 """
 @main_bp.route('/photo/p/<int:photo_id>')
 @login_required
+@confirm_required # 验证确认状态
 def photo_previous(photo_id):
     photo = Photo.query.get_or_404(photo_id)
     photo_p = Photo.query.with_parent(photo.author).filter(Photo.id > photo_id).order_by(Photo.id.asc()).first()
@@ -113,6 +118,7 @@ def photo_previous(photo_id):
 """ 删除图片 """
 @main_bp.route('/delete/photo/<int:photo_id>', methods=['POST'])
 @login_required
+@confirm_required # 验证确认状态
 def delete_photo(photo_id):
     photo = Photo.query.get_or_404(photo_id)
     if current_user != photo.author and not current_user.can('MODERATE'):
@@ -129,4 +135,15 @@ def delete_photo(photo_id):
             return redirect(url_for('user.index', username=photo.author.username))
         return redirect(url_for('.show_photo', photo_id=photo_p.id))
     return redirect(url_for('.show_photo', photo_id=photo_n.id))
+
+""" 举报图片 """
+@main_bp.route('/report/photo/<int:photo_id>', methods=['POST'])
+@login_required
+@confirm_required # 验证确认状态
+def report_photo(photo_id):
+    photo = Photo.query.get_or_404(photo_id)
+    photo.flag += 1
+    db.session.commit()
+    flash('举报成功', 'success')
+    return redirect(url_for('.show_photo', photo_id=photo.id))
 
