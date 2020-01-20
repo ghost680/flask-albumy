@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from datetime import datetime
 from flask import current_app
 from flask_login import UserMixin
@@ -140,6 +142,7 @@ class Permission(db.Model):
     # 建立和角色模型的多对多关系
     roles = db.relationship('Role', secondary=roles_permissions, back_populates='permissions')
 
+
 """ 淘宝店铺数据模型 """
 class Taobao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -148,3 +151,13 @@ class Taobao(db.Model):
     book_price = db.Column(db.String(20))
     book_isbn = db.Column(db.String(20))
     create_time = db.Column(db.DateTime, default=datetime.now)
+
+""" 使用数据库监听函数，当Photo记录被删除时，自动删除对应文件 """
+@db.event.listens_for(Photo, 'after_delete', named=True)
+def delete_photos(**kwargs):
+    target = kwargs['target']
+    for filename in [target.filename, target.filename_s, target.filename_m]:
+        if filename is not None:
+            path = os.path.join(current_app.config['ALBUMY_UPLOAD_PATH'], filename)
+            if os.path.exists(path):
+                os.remove(path)
